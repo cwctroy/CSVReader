@@ -1,0 +1,3 @@
+"C:\Program Files\JetBrains\CLion 2019.3.5\bin\cmake\win\bin\cmake.exe" -E remove -f CMakeFiles\CSVPrinter.dir/objects.a
+C:\MinGW\bin\ar.exe cr CMakeFiles\CSVPrinter.dir/objects.a @CMakeFiles\CSVPrinter.dir\objects1.rsp
+C:\MinGW\bin\g++.exe -g  -static -Wl,--whole-archive CMakeFiles\CSVPrinter.dir/objects.a -Wl,--no-whole-archive  -o CSVPrinter.exe -Wl,--out-implib,libCSVPrinter.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\CSVPrinter.dir\linklibs.rsp

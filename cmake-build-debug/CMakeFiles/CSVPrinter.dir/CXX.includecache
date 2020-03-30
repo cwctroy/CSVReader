@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Cameron/CLionProjects/CSVPrinter/main.cpp
+iostream
+-
+cstdio
+-
+vector
+-
+string
+-
+fstream
+-
+sstream
+-
+
