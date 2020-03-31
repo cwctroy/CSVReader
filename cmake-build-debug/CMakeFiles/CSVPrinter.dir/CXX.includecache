@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-C:/Users/Cameron/CLionProjects/CSVPrinter/main.cpp
+C:/Users/Cameron/Projects/CSVReader/main.cpp
 iostream
 -
 cstdio
@@ -18,5 +18,9 @@ string
 fstream
 -
 sstream
+-
+algorithm
+-
+cstring
 -
 
