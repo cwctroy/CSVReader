@@ -14,7 +14,7 @@ string valueType;
 string sortOrder;
 
 vector<string> words;
-vector<int> numbers;
+vector<double> numbers;
 
 bool ascending = false;
 bool descending = false;
@@ -51,17 +51,6 @@ int isString(string str) {
     return ret;
 }
 
-//TODO handle decimal values
-int stringToNum(const string& str) {
-    int ret = 0;
-    for(char i : str) {
-        ret *= 10;
-        ret += i - 48;
-    }
-    return ret;
-}
-
-//TODO add specific error statements
 int validateArgs(int argc, char** argv) {
     if (argc < 4) {
         printf(R"(improper number of params specified. Expected: "filepath" "sortOrder" "valueType" )");
@@ -73,7 +62,6 @@ int validateArgs(int argc, char** argv) {
 
 int main(int argc, char** argv) {
 
-    //TODO add more info to output
     if (!validateArgs(argc, argv)) {
         printf("Invalid args\n");
         return -1;
@@ -150,9 +138,9 @@ int main(int argc, char** argv) {
         }
         //TODO add handing of scientific notation
         else if(isNumber(value[0])) {
-            int num = stringToNum(value);
+            double num = stod(value, NULL);
 #ifdef DEBUG
-            printf("Number %d added\n", num);
+            printf("Number %f added\n", num);
 #endif
             numbers.push_back(num);
         }
@@ -183,7 +171,7 @@ int main(int argc, char** argv) {
 
     /* print relevant vectors */
     if (numeric) {
-        for (int n : numbers) {
+        for (double n : numbers) {
             cout << n << " ";
         }
     }
