@@ -86,6 +86,10 @@ int main(int argc, char** argv) {
     else if (sortOrder == "descending"){
         descending = true;
     }
+    else {
+        printf("Invalid sort order. Options: ascending, descending\n");
+        return -1;
+    }
 
 #ifdef DEBUG
     printf("SortOrder selected:");
@@ -109,6 +113,10 @@ int main(int argc, char** argv) {
     }
     else if (valueType == "both") {
         numeric = alpha = true;
+    }
+    else {
+       printf("Invalid value type. Options: alpha, numeric, both\n");
+       return -1;
     }
 
 #ifdef DEBUG
