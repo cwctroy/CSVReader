@@ -5,9 +5,8 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
-#include <cstring>
 
-#define DEBUG
+//#define DEBUG
 
 using namespace std;
 
@@ -17,6 +16,10 @@ vector<string> words;
 
 vector<int> numbers;
 
+bool ascending = false;
+bool descending = false;
+bool alpha = false;
+bool numeric = false;
 
 fstream file;
 
@@ -78,8 +81,51 @@ int main(int argc, char** argv) {
     }
 
     sortOrder = argv[2];
+    if (sortOrder == "ascending") {
+
+        ascending = true;
+    }
+    else if (sortOrder == "descending"){
+        descending = true;
+    }
+
+#ifdef DEBUG
+    printf("SortOrder selected:");
+    if (ascending) {
+        printf("ascending\n");
+    }
+    else if (descending) {
+        printf("descending\n");
+    }
+    else {
+        printf("Error\n");
+    }
+#endif
 
     valueType = argv[3];
+    if (valueType == "alpha") {
+        alpha = true;
+    }
+    else if (valueType == "numeric") {
+        numeric = true;
+    }
+    else if (valueType == "both") {
+        numeric = alpha = true;
+    }
+
+#ifdef DEBUG
+    printf("ValueType selected:");
+    if (alpha) {
+        printf("alpha");
+    }
+    if (numeric) {
+        printf("numeric\n");
+    }
+    if (!alpha && !numeric){
+        printf("Error");
+    }
+    printf("\n");
+#endif
 
     file.open(argv[1]);
 
@@ -108,49 +154,41 @@ int main(int argc, char** argv) {
     }
 
     /* Sort relevant vectors*/
-    if (sortOrder == "ascending") {
+    if (ascending) {
 
-        if (valueType == "both") {
+        //TODO handle quote marks
+        if (alpha) {
             sort(numbers.begin(), numbers.end());
-            sort(words.begin(), words.end());
         }
-        else if (valueType == "alpha") {
+        if (numeric) {
             sort(words.begin(), words.end());
-        }
-        else {
-            sort(numbers.begin(), numbers.end());
         }
 
     }
-    else if (sortOrder == "descending") {
+    else if (descending) {
 
-        if (valueType == "both") {
+        if (alpha) {
             sort(numbers.begin(), numbers.end(), greater<>());
-            sort(words.begin(), words.end(),greater<>());
         }
-        else if (valueType == "alpha") {
+        if (numeric) {
             sort(words.begin(), words.end(), greater<>());
         }
-        else {
-            sort(numbers.begin(), numbers.end(), greater<>());
+    }
+
+    /* print relevant vectors */
+    if (numeric) {
+        for (int n : numbers) {
+            cout << n << " ";
         }
+        cout << endl;
+    }
+    if (alpha) {
+        for (string str : words) {
+            cout << str << " ";
+        }
+        cout << endl;
     }
 
-#ifdef DEBUG
-    printf("Printing strings\n");
-
-    for (const string& str : words) {
-        printf("%s\n", str.c_str());
-    }
-
-
-    printf("Sorted numbers\n");
-    for (int n: numbers) {
-        printf("%d ",n);
-    }
-    printf("\n");
-
-#endif
     file.close();
 
     return 0;
