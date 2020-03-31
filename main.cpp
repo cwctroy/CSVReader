@@ -21,12 +21,12 @@ bool descending = false;
 bool alpha = false;
 bool numeric = false;
 
-fstream file;
 
-/* compares the first digit  */
+/* Returns whether or not the given char is a number */
 int isNumber(char c) {
     int ret = 0;
-    if(c == '1' ||
+    if(
+       c == '1' ||
        c == '2' ||
        c == '3' ||
        c == '4' ||
@@ -36,12 +36,14 @@ int isNumber(char c) {
        c == '8' ||
        c == '9' ||
        c == '0'
-            ) {
+       )
+    {
         ret = 1;
     }
     return ret;
 }
 
+/* Returns whether or not the given string is a string by checking if the first char is a number */
 int isString(string str) {
     int ret = 0;
 
@@ -51,6 +53,7 @@ int isString(string str) {
     return ret;
 }
 
+/* Ensures that the proper number of args have been passed to the program */
 int validateArgs(int argc, char** argv) {
     if (argc < 4) {
         printf(R"(improper number of params specified. Expected: "filepath" "sortOrder" "valueType" )");
@@ -121,6 +124,7 @@ int main(int argc, char** argv) {
     printf("\n");
 #endif
 
+    fstream file;
     file.open(argv[1]);
 
     string line, value;
@@ -136,15 +140,14 @@ int main(int argc, char** argv) {
 #endif
             words.push_back(value);
         }
-        //TODO add handing of scientific notation
         else if(isNumber(value[0])) {
-            double num = stod(value, NULL);
+            double num = stod(value, nullptr);
 #ifdef DEBUG
             printf("Number %f added\n", num);
 #endif
             numbers.push_back(num);
         }
-        //TODO add error?
+
     }
 
     /* Sort relevant vectors*/
@@ -176,7 +179,7 @@ int main(int argc, char** argv) {
         }
     }
     if (alpha) {
-        for (string str : words) {
+        for (const string& str : words) {
             cout << str << " ";
         }
     }
