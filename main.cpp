@@ -6,14 +6,14 @@
 #include <sstream>
 #include <algorithm>
 
-//#define DEBUG
+#define DEBUG
 
 using namespace std;
 
 string valueType;
 string sortOrder;
-vector<string> words;
 
+vector<string> words;
 vector<int> numbers;
 
 bool ascending = false;
@@ -61,11 +61,10 @@ int stringToNum(const string& str) {
     return ret;
 }
 
-//TODO add instructions
 //TODO add specific error statements
 int validateArgs(int argc, char** argv) {
-
     if (argc < 4) {
+        printf(R"(improper number of params specified. Expected: "filepath" "sortOrder" "valueType" )");
         return -1;
     }
 
@@ -82,7 +81,6 @@ int main(int argc, char** argv) {
 
     sortOrder = argv[2];
     if (sortOrder == "ascending") {
-
         ascending = true;
     }
     else if (sortOrder == "descending"){
@@ -158,20 +156,20 @@ int main(int argc, char** argv) {
 
         //TODO handle quote marks
         if (alpha) {
-            sort(numbers.begin(), numbers.end());
+            sort(words.begin(), words.end());
         }
         if (numeric) {
-            sort(words.begin(), words.end());
+            sort(numbers.begin(), numbers.end());
         }
 
     }
     else if (descending) {
 
         if (alpha) {
-            sort(numbers.begin(), numbers.end(), greater<>());
+            sort(words.begin(), words.end(), greater<>());
         }
         if (numeric) {
-            sort(words.begin(), words.end(), greater<>());
+            sort(numbers.begin(), numbers.end(), greater<>());
         }
     }
 
@@ -180,14 +178,13 @@ int main(int argc, char** argv) {
         for (int n : numbers) {
             cout << n << " ";
         }
-        cout << endl;
     }
     if (alpha) {
         for (string str : words) {
             cout << str << " ";
         }
-        cout << endl;
     }
+    cout << endl;
 
     file.close();
 
