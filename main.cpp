@@ -6,14 +6,16 @@
 #include <sstream>
 #include <algorithm>
 
-#define DEBUG
+//#define DEBUG
 
 using namespace std;
 
 string valueType;
 string sortOrder;
 
-vector<string> words;
+vector<string> strings;
+vector<string> quotedStrings;
+vector<string> unquotedStrings;
 vector<double> numbers;
 
 bool ascending = false;
@@ -51,6 +53,57 @@ int isString(string str) {
         ret = 1;
     }
     return ret;
+}
+
+/* combines the quoted and unquoted strings into one vector */
+vector<string> combineVectors(vector<string> vector1, vector<string> vector2) {
+        int index1 = 0;
+        int index2 = 0;
+        vector<string> ret;
+
+        while (!vector1.empty() && !vector2.empty()) {
+            if (vector1[0] <= vector2[0]) {
+#ifdef DEBUG
+      printf("vector1[0] > vector2[0]. Adding %s instead of %s\n", vector1[0].c_str(), vector2[0].c_str());
+#endif
+                ret.push_back(vector1[0]);
+                vector1.erase(vector1.begin());
+            }
+            else {
+#ifdef DEBUG
+                printf("vector1[0] <= vector2[0]. Adding %s instead of %s\n", vector2[0].c_str(), vector1[0].c_str());
+#endif
+                ret.push_back("\'" + vector2[0] + "\'");
+                vector2.erase(vector2.begin());
+            }
+        }
+
+        if (vector1.empty()) {
+
+#ifdef DEBUG
+    printf("Dumping vector2 into ret\n");
+#endif
+
+            for (const string& str : vector2) {
+                ret.push_back('\'' + str + '\'');
+#ifdef DEBUG
+                printf("adding %s\n", str.c_str());
+#endif
+            }
+        }
+        else if(vector2.empty()) {
+#ifdef DEBUG
+            printf("Dumping vector1 into ret\n");
+#endif
+            for (const string& str : vector1) {
+                ret.push_back(str);
+#ifdef DEBUG
+                printf("adding %s\n", str.c_str());
+#endif
+            }
+        }
+
+            return ret;
 }
 
 /* Ensures that the proper number of args have been passed to the program */
@@ -138,7 +191,13 @@ int main(int argc, char** argv) {
 #ifdef DEBUG
             printf("String %s added\n", value.c_str());
 #endif
-            words.push_back(value);
+            /* if string has quotes, remove them before adding to vector */
+            if ((value[0] == '\'' || value[0] == '\"') && (value.back() == '\'' || value.back() == '\"')) {
+                quotedStrings.push_back(value.substr(1, value.size() - 2));
+            }
+            else {
+                unquotedStrings.push_back(value);
+            }
         }
         else if(isNumber(value[0])) {
             double num = stod(value, nullptr);
@@ -155,7 +214,16 @@ int main(int argc, char** argv) {
 
         //TODO handle quote marks
         if (alpha) {
-            sort(words.begin(), words.end());
+            sort(strings.begin(), strings.end());
+            sort(quotedStrings.begin(), quotedStrings.end());
+#ifdef DEBUG
+            cout << "quoted strings";
+        for (string str : quotedStrings) {
+            cout << str << " ";
+        }
+        cout << endl;
+#endif
+            strings = combineVectors(unquotedStrings, quotedStrings);
         }
         if (numeric) {
             sort(numbers.begin(), numbers.end());
@@ -165,12 +233,14 @@ int main(int argc, char** argv) {
     else if (descending) {
 
         if (alpha) {
-            sort(words.begin(), words.end(), greater<>());
+            sort(strings.begin(), strings.end(), greater<>());
+            sort(quotedStrings.begin(), quotedStrings.end());
         }
         if (numeric) {
             sort(numbers.begin(), numbers.end(), greater<>());
         }
     }
+
 
     /* print relevant vectors */
     if (numeric) {
@@ -179,7 +249,7 @@ int main(int argc, char** argv) {
         }
     }
     if (alpha) {
-        for (const string& str : words) {
+        for (const string& str : strings) {
             cout << str << " ";
         }
     }
