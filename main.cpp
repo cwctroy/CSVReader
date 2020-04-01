@@ -6,7 +6,7 @@
 #include <sstream>
 #include <algorithm>
 
-//#define DEBUG
+#define DEBUG
 
 using namespace std;
 
@@ -60,46 +60,87 @@ vector<string> combineVectors(vector<string> vector1, vector<string> vector2) {
         int index1 = 0;
         int index2 = 0;
         vector<string> ret;
-
-        while (!vector1.empty() && !vector2.empty()) {
-            if (vector1[0] <= vector2[0]) {
+        if (ascending) {
+            while (!vector1.empty() && !vector2.empty()) {
+                if (vector1[0] <= vector2[0]) {
 #ifdef DEBUG
-      printf("vector1[0] > vector2[0]. Adding %s instead of %s\n", vector1[0].c_str(), vector2[0].c_str());
+                    printf("vector1[0] < vector2[0]. Adding %s instead of %s\n", vector1[0].c_str(), vector2[0].c_str());
 #endif
-                ret.push_back(vector1[0]);
-                vector1.erase(vector1.begin());
+                    ret.push_back(vector1[0]);
+                    vector1.erase(vector1.begin());
+                } else {
+#ifdef DEBUG
+                    printf("vector1[0] > vector2[0]. Adding %s instead of %s\n", vector2[0].c_str(), vector1[0].c_str());
+#endif
+                    ret.push_back("\'" + vector2[0] + "\'");
+                    vector2.erase(vector2.begin());
+                }
             }
-            else {
+
+            if (vector1.empty()) {
+
 #ifdef DEBUG
-                printf("vector1[0] <= vector2[0]. Adding %s instead of %s\n", vector2[0].c_str(), vector1[0].c_str());
+                printf("Dumping vector2 into ret\n");
 #endif
-                ret.push_back("\'" + vector2[0] + "\'");
-                vector2.erase(vector2.begin());
+
+                for (const string &str : vector2) {
+                    ret.push_back('\'' + str + '\'');
+#ifdef DEBUG
+                    printf("adding %s\n", str.c_str());
+#endif
+                }
+            } else if (vector2.empty()) {
+#ifdef DEBUG
+                printf("Dumping vector1 into ret\n");
+#endif
+                for (const string &str : vector1) {
+                    ret.push_back(str);
+#ifdef DEBUG
+                    printf("adding %s\n", str.c_str());
+#endif
+                }
             }
         }
+        else if (descending) {
 
-        if (vector1.empty()) {
-
+            while (!vector1.empty() && !vector2.empty()) {
+                if (vector1[0] > vector2[0]) {
 #ifdef DEBUG
-    printf("Dumping vector2 into ret\n");
+                    printf("vector1[0] < vector2[0]. Adding %s instead of %s\n", vector1[0].c_str(), vector2[0].c_str());
 #endif
-
-            for (const string& str : vector2) {
-                ret.push_back('\'' + str + '\'');
+                    ret.push_back(vector1[0]);
+                    vector1.erase(vector1.begin());
+                } else {
 #ifdef DEBUG
-                printf("adding %s\n", str.c_str());
+                    printf("vector1[0] >= vector2[0]. Adding %s instead of %s\n", vector2[0].c_str(), vector1[0].c_str());
 #endif
+                    ret.push_back("\'" + vector2[0] + "\'");
+                    vector2.erase(vector2.begin());
+                }
             }
-        }
-        else if(vector2.empty()) {
+
+            if (vector1.empty()) {
+
 #ifdef DEBUG
-            printf("Dumping vector1 into ret\n");
+                printf("Dumping vector2 into ret\n");
 #endif
-            for (const string& str : vector1) {
-                ret.push_back(str);
+
+                for (const string &str : vector2) {
+                    ret.push_back('\'' + str + '\'');
 #ifdef DEBUG
-                printf("adding %s\n", str.c_str());
+                    printf("adding %s\n", str.c_str());
 #endif
+                }
+            } else if (vector2.empty()) {
+#ifdef DEBUG
+                printf("Dumping vector1 into ret\n");
+#endif
+                for (const string &str : vector1) {
+                    ret.push_back(str);
+#ifdef DEBUG
+                    printf("adding %s\n", str.c_str());
+#endif
+                }
             }
         }
 
@@ -212,7 +253,6 @@ int main(int argc, char** argv) {
     /* Sort relevant vectors*/
     if (ascending) {
 
-        //TODO handle quote marks
         if (alpha) {
             sort(strings.begin(), strings.end());
             sort(quotedStrings.begin(), quotedStrings.end());
@@ -234,7 +274,17 @@ int main(int argc, char** argv) {
 
         if (alpha) {
             sort(strings.begin(), strings.end(), greater<>());
-            sort(quotedStrings.begin(), quotedStrings.end());
+            sort(quotedStrings.begin(), quotedStrings.end(), greater<>());
+
+#ifdef DEBUG
+            cout << "quoted strings";
+            for (string str : quotedStrings) {
+                cout << str << " ";
+            }
+            cout << endl;
+#endif
+
+            strings = combineVectors(unquotedStrings, quotedStrings);
         }
         if (numeric) {
             sort(numbers.begin(), numbers.end(), greater<>());
